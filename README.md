@@ -1,0 +1,1 @@
+To use; download the main folder and add it to your Matlab path. Then, point t_preproc to the folder containing your CSV files output from Trace. Output from t_preproc is used as input to subsequent functions. Descriptions of each function will be added here over time. See also Carter et al (20xx) for an overview of TraceLAB functionality.
