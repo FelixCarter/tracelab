@@ -1,0 +1,68 @@
+function plot_corrca_boxplot(res, compIdxVec, cfg)
+% plot_corrca_boxplot - Plots per-subject ISC values as one boxplot figure
+%                      for one or multiple components (side-by-side).
+%
+% INPUTS:
+%   res         : Struct containing ISC_persubject [nComp × nSubjects]
+%   compIdxVec  : Vector of component indices to plot (e.g. [1 2 3])
+%   cfg         : Config structure (can contain 'boxplotYLim')
+
+% Get ISC values for selected components
+vals = res.ISC_persubject(compIdxVec, :)';  % [nSubjects × nComps]
+nComp = numel(compIdxVec);
+
+% Determine global y-limits
+% --- Y-limit setup ---
+if isfield(cfg, 'boxplot_ylim') && ~isempty(cfg.boxplot_ylim)
+    y_lims = cfg.boxplot_ylim;
+else
+    pad = 0.05 * range(vals(:));
+    y_lims = [min(vals(:))-pad, max(vals(:))+pad];
+end
+
+% Plot using notBoxPlot (if available)
+if exist('notBoxPlot', 'file')
+    notBoxPlot(vals);
+    xticks(1:nComp);
+    xticklabels("Comp " + string(compIdxVec));
+    xlim([0.5, nComp + 0.5]);
+    ylim(y_lims);
+    % Faint horizontal lines behind the data
+    hold on;
+    y_vals = y_lims(1):0.05:y_lims(2);
+    grid_lines = gobjects(numel(y_vals),1);
+    for i = 1:numel(y_vals)
+        y = y_vals(i);
+        grid_lines(i) = plot(xlim, [y y], '-', ...
+            'Color', [0.88 0.88 0.88], 'LineWidth', 0.5, ...
+            'HandleVisibility', 'off');
+    end
+    % Send gridlines to back
+    uistack(grid_lines, 'bottom');
+
+    ylabel('ISC (per subject)');
+    title('Per-subject ISC Boxplot');
+    set(gca, 'Box', 'off');
+
+else
+    % Fallback: styled boxchart
+    hold on;
+    for i = 1:nComp
+        vi = vals(:,i);
+        boxchart(ones(size(vi)) * i, vi, ...
+            'BoxFaceColor', [0.3 0.6 0.9], ...
+            'BoxWidth', 0.3, ...
+            'BoxFaceAlpha', 0.65, ...
+            'LineWidth', 1.2);
+        scatter(ones(size(vi)) * i, vi, 15, 'k', 'filled', ...
+            'MarkerFaceAlpha', 0.4, 'MarkerEdgeAlpha', 0.4);
+    end
+    xticks(1:nComp);
+    xticklabels("Comp " + string(compIdxVec));
+    xlim([0.5, nComp + 0.5]);
+    ylim(y_lims);
+    ylabel('ISC (per subject)');
+    title('Per-subject ISC Boxplot');
+    set(gca, 'Box', 'off');
+end
+end
