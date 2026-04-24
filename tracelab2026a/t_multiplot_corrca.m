@@ -70,7 +70,7 @@ figs = struct();
 for i = 1:numel(groupNames)
     group = groupNames{i};
     res = cordat.(group);
-    comps = resolve_comps(res, cfg);
+    comps = cfg.components;
     comps = comps(comps <= size(res.AvgA,2));
     nComp = numel(comps);
     nCols = nComp + 1;
