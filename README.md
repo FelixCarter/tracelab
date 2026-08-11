@@ -2,6 +2,8 @@
 
 **A MATLAB toolbox for interindividual synchrony analysis of facial expression and head movement data acquired via Trace**
 
+Paper available via Open Access
+
 [![DOI](https://img.shields.io/badge/DOI-10.3390%2Fe28050503-blue)](https://doi.org/10.3390/e28050503)
 
 ---
